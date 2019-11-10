@@ -39,12 +39,17 @@ char    *ft_strjoin(const char *s1, const char *s2)
     return (str);
 }
 
-int     ft_readline(int fd, char *str)
+char     *ft_readline(int fd, char *str)
 {
     int     verif;
     char    temp[BUFF_SIZE + 1]
     
     if (fd < 0 || !str)
         return (NULL);
-    
+    while (verif = read(fd, temp, BUFF_SIZE))
+    {
+        temp[verif] = '\0';
+        str = ft_strjoin(str, temp);
+    }
+    return (str);
 }
