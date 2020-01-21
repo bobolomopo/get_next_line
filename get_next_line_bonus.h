@@ -6,12 +6,12 @@
 /*   By: jandre <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 15:48:13 by jandre            #+#    #+#             */
-/*   Updated: 2020/01/21 16:48:55 by jandre           ###   ########.fr       */
+/*   Updated: 2020/01/21 17:43:06 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 32
 # endif
