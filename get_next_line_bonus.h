@@ -6,7 +6,7 @@
 /*   By: jandre <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 15:48:13 by jandre            #+#    #+#             */
-/*   Updated: 2020/01/21 16:17:18 by jandre           ###   ########.fr       */
+/*   Updated: 2020/01/21 16:48:55 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 int				get_next_line(int fd, char **line);
 int				ft_strlen(char *str);
 char			*ft_strnew(int size);
-char			*ft_strcpy_from_c(char *str, char *str2, char c);
+char			*ft_strcpy_from_c_to_c(char *str, char *str2, char c);
 char			*ft_strjoin_c(char *s1, char *s2, char c);
 int				check_char(char *str, char c);
 
