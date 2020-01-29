@@ -1,41 +1,101 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line2.c                                   :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jandre <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/12/10 14:44:56 by jandre            #+#    #+#             */
-/*   Updated: 2020/01/21 16:46:45 by jandre           ###   ########.fr       */
+/*   Created: 2020/01/29 15:58:47 by jandre            #+#    #+#             */
+/*   Updated: 2020/01/29 18:06:44 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <fcntl.h>
 
-int		get_next_line(int fd, char **line)
+char		*ft_strnew(int size)
 {
+	char	*result;
+	int		i;
+
+	if (!(result = (char *)malloc(sizeof(char) * size + 1)))
+		return (NULL);
+	i = 0;
+	while (i <= size)
+	{
+		result[i] = '\0';
+		i++;
+	}
+	return (result);
+}
+
+int		ft_charpos(char *str, char c)
+{
+	int i;
+
+	i = 0;
+	while (str[i] && str[i] != c)
+		i++;
+	return (i);
+}
+
+int				get_next_line(int fd, char **line)
+{
+	static char	*rest[OPEN_MAX];
 	char		buffer[BUFFER_SIZE + 1];
-	static char	*temp;
+	char		*ptr;
 	int			verif;
 
-	if (fd < 0 || fd >= OPEN_MAX || !line || (!(*line = ft_strnew(0))))
+	if (fd > OPEN_MAX || !line)
 		return (-1);
-	if (temp)
+	if (rest[fd] == NULL)
 	{
-		if (!(*line = ft_strjoin_c(*line, temp, '\n')))
+		if (!(rest[fd] = ft_strnew(0)))
 			return (-1);
-		if (check_char(temp, '\n'))
-			return ((temp = ft_strcpy_from_c(temp, temp, '\n')) ? 1 : -1);
 	}
-	while ((verif = read(fd, buffer, BUFFER_SIZE)) > 0)
+	while (!(ft_strchr(rest[fd], '\n')) &&
+			(verif = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
 		buffer[verif] = '\0';
-		if (!(*line = ft_strjoin_c(*line, buffer, '\n')))
+		ptr = rest[fd];
+		if (!(rest[fd] = ft_strjoin(ptr, buffer)))
 			return (-1);
-		if (check_char(buffer, '\n'))
-			return ((temp = ft_strcpy_from_c(buffer, temp, '\n')) ? 1 : -1);
+		free(ptr);
 	}
-	free(*line);
-	return (verif);
+	if (!(*line = ft_substr(rest[fd], 0, ft_charpos(rest[fd], '\n'))))
+		return (-1);
+	if (ft_strchr(rest[fd], '\n'))
+	{
+		ft_strcpy(rest[fd], ft_strchr(rest[fd], '\n') + 1);
+		return (1);
+	}
+	if (ft_strlen(rest[fd]) > 0)
+	{
+		rest[fd] = ft_strchr(rest[fd], '\0');
+		return (1);
+	}
+	return (0);
 }
+/*
+#include <fcntl.h>
+#include <stdio.h>
+
+int main()
+{
+	int fd;
+	char *line;
+	int line_count = 1;
+	if ((fd = open("hhgttg.txt", O_RDONLY)) == -1)
+	{
+		printf("Couldn't open test file :(\n");
+		return (0);
+	}
+	while (get_next_line(fd, &line) > 0)
+	{
+		printf("Line %i: '%s'\n", line_count, line);
+		free(line);
+		line_count++;
+	}
+	free(line);
+	close(fd);
+	return (0);
+}*/
