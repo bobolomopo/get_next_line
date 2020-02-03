@@ -12,6 +12,22 @@
 
 #include "get_next_line.h"
 
+char	*ft_strnew(int size)
+{
+	char	*result;
+	int		i;
+
+	if (!(result = (char *)malloc(sizeof(char) * size + 1)))
+		return (NULL);
+	i = 0;
+	while (i <= size)
+	{
+		result[i] = '\0';
+		i++;
+	}
+	return (result);
+}
+
 int		ft_strlen(const char *str)
 {
 	size_t i;
@@ -20,26 +36,6 @@ int		ft_strlen(const char *str)
 	while (str[i])
 		i++;
 	return (i);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	int		i;
-	char	*result;
-	char	test;
-
-	i = 0;
-	test = (char)c;
-	result = (char *)s;
-	while (s[i])
-	{
-		if (s[i] == test)
-			return (result + i);
-		i++;
-	}
-	if (s[i] == c)
-		return (result + i);
-	return (NULL);
 }
 
 char	*ft_substr(char const *s, int start, int len)

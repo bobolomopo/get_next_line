@@ -19,6 +19,8 @@
 # include <unistd.h>
 # include <string.h>
 # include <limits.h>
+# include <fcntl.h>
+# include <stdio.h>
 
 int		get_next_line(int fd, char **line);
 int		ft_charpos(char *str, char c);

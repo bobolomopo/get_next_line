@@ -12,20 +12,24 @@
 
 #include "get_next_line.h"
 
-char		*ft_strnew(int size)
+char	*ft_strchr(const char *s, int c)
 {
-	char	*result;
 	int		i;
+	char	*result;
+	char	test;
 
-	if (!(result = (char *)malloc(sizeof(char) * size + 1)))
-		return (NULL);
 	i = 0;
-	while (i <= size)
+	test = (char)c;
+	result = (char *)s;
+	while (s[i])
 	{
-		result[i] = '\0';
+		if (s[i] == test)
+			return (result + i);
 		i++;
 	}
-	return (result);
+	if (s[i] == c)
+		return (result + i);
+	return (NULL);
 }
 
 int		ft_charpos(char *str, char c)
@@ -40,12 +44,12 @@ int		ft_charpos(char *str, char c)
 
 int				get_next_line(int fd, char **line)
 {
-	static char	*rest[OPEN_MAX];
+	static char	*rest[FOPEN_MAX];
 	char		buffer[BUFFER_SIZE + 1];
 	char		*ptr;
 	int			verif;
 
-	if (fd > OPEN_MAX || !line)
+	if (fd > FOPEN_MAX || !line)
 		return (-1);
 	if (rest[fd] == NULL)
 	{
@@ -75,27 +79,4 @@ int				get_next_line(int fd, char **line)
 	}
 	return (0);
 }
-/*
-#include <fcntl.h>
-#include <stdio.h>
 
-int main()
-{
-	int fd;
-	char *line;
-	int line_count = 1;
-	if ((fd = open("hhgttg.txt", O_RDONLY)) == -1)
-	{
-		printf("Couldn't open test file :(\n");
-		return (0);
-	}
-	while (get_next_line(fd, &line) > 0)
-	{
-		printf("Line %i: '%s'\n", line_count, line);
-		free(line);
-		line_count++;
-	}
-	free(line);
-	close(fd);
-	return (0);
-}*/
