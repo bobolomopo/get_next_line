@@ -6,7 +6,7 @@
 /*   By: jandre <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/29 17:33:12 by jandre            #+#    #+#             */
-/*   Updated: 2020/01/29 17:39:09 by jandre           ###   ########.fr       */
+/*   Updated: 2020/02/04 16:37:41 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,7 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, int start, int len);
 char	*ft_strchr(char const *s, int c);
 int		ft_strlen(const char *str);
+int		ft_initialize(int fd, char **line, char **rest);
+int		ft_copy(char **rest, int fd);
 
 #endif

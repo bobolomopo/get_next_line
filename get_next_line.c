@@ -6,7 +6,7 @@
 /*   By: jandre <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/29 15:58:47 by jandre            #+#    #+#             */
-/*   Updated: 2020/01/29 18:06:44 by jandre           ###   ########.fr       */
+/*   Updated: 2020/02/04 16:36:52 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,31 +42,20 @@ int		ft_charpos(char *str, char c)
 	return (i);
 }
 
-int				get_next_line(int fd, char **line)
+int		ft_initialize(int fd, char **line, char **rest)
 {
-	static char	*rest[FOPEN_MAX];
-	char		buffer[BUFFER_SIZE + 1];
-	char		*ptr;
-	int			verif;
-
-	if (fd > FOPEN_MAX || !line)
+	if (fd > OPEN_MAX || !line)
 		return (-1);
 	if (rest[fd] == NULL)
 	{
 		if (!(rest[fd] = ft_strnew(0)))
 			return (-1);
 	}
-	while (!(ft_strchr(rest[fd], '\n')) &&
-			(verif = read(fd, buffer, BUFFER_SIZE)) > 0)
-	{
-		buffer[verif] = '\0';
-		ptr = rest[fd];
-		if (!(rest[fd] = ft_strjoin(ptr, buffer)))
-			return (-1);
-		free(ptr);
-	}
-	if (!(*line = ft_substr(rest[fd], 0, ft_charpos(rest[fd], '\n'))))
-		return (-1);
+	return (1);
+}
+
+int		ft_copy(char **rest, int fd)
+{
 	if (ft_strchr(rest[fd], '\n'))
 	{
 		ft_strcpy(rest[fd], ft_strchr(rest[fd], '\n') + 1);
@@ -80,3 +69,25 @@ int				get_next_line(int fd, char **line)
 	return (0);
 }
 
+int		get_next_line(int fd, char **line)
+{
+	static char	*rest[OPEN_MAX];
+	char		buffer[BUFFER_SIZE + 1];
+	char		*ptr;
+	int			verif;
+
+	if (ft_initialize(fd, line, rest) < 0)
+		return (-1);
+	while (!(ft_strchr(rest[fd], '\n')) &&
+			(verif = read(fd, buffer, BUFFER_SIZE)) > 0)
+	{
+		buffer[verif] = '\0';
+		ptr = rest[fd];
+		if (!(rest[fd] = ft_strjoin(ptr, buffer)))
+			return (-1);
+		free(ptr);
+	}
+	if (!(*line = ft_substr(rest[fd], 0, ft_charpos(rest[fd], '\n'))))
+		return (-1);
+	return (ft_copy(rest, fd));
+}

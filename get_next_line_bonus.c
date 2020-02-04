@@ -1,43 +1,93 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line2.c                                   :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jandre <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/12/10 14:44:56 by jandre            #+#    #+#             */
-/*   Updated: 2020/01/21 17:00:53 by jandre           ###   ########.fr       */
+/*   Created: 2020/01/29 15:58:47 by jandre            #+#    #+#             */
+/*   Updated: 2020/02/04 16:37:30 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-#include <fcntl.h>
+#include "get_next_line_bonus.h"
+
+char	*ft_strchr(const char *s, int c)
+{
+	int		i;
+	char	*result;
+	char	test;
+
+	i = 0;
+	test = (char)c;
+	result = (char *)s;
+	while (s[i])
+	{
+		if (s[i] == test)
+			return (result + i);
+		i++;
+	}
+	if (s[i] == c)
+		return (result + i);
+	return (NULL);
+}
+
+int		ft_charpos(char *str, char c)
+{
+	int i;
+
+	i = 0;
+	while (str[i] && str[i] != c)
+		i++;
+	return (i);
+}
+
+int		ft_initialize(int fd, char **line, char **rest)
+{
+	if (fd > OPEN_MAX || !line)
+		return (-1);
+	if (rest[fd] == NULL)
+	{
+		if (!(rest[fd] = ft_strnew(0)))
+			return (-1);
+	}
+	return (1);
+}
+
+int		ft_copy(char **rest, int fd)
+{
+	if (ft_strchr(rest[fd], '\n'))
+	{
+		ft_strcpy(rest[fd], ft_strchr(rest[fd], '\n') + 1);
+		return (1);
+	}
+	if (ft_strlen(rest[fd]) > 0)
+	{
+		rest[fd] = ft_strchr(rest[fd], '\0');
+		return (1);
+	}
+	return (0);
+}
 
 int		get_next_line(int fd, char **line)
 {
+	static char	*rest[OPEN_MAX];
 	char		buffer[BUFFER_SIZE + 1];
-	static char	*temp[OPEN_MAX];
+	char		*ptr;
 	int			verif;
 
-	if (fd < 0 || fd >= OPEN_MAX || !line || (!(*line = ft_strnew(0))))
+	if (ft_initialize(fd, line, rest) < 0)
 		return (-1);
-	if (temp[fd])
-	{
-		if (!(*line = ft_strjoin_c(*line, temp[fd], '\n')))
-			return (-1);
-		if (check_char(temp[fd], '\n'))
-			return ((temp[fd] = ft_strcpy_from_c(temp[fd],
-							temp[fd], '\n')) ? 1 : -1);
-	}
-	while ((verif = read(fd, buffer, BUFFER_SIZE)) > 0)
+	while (!(ft_strchr(rest[fd], '\n')) &&
+			(verif = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
 		buffer[verif] = '\0';
-		if (!(*line = ft_strjoin_c(*line, buffer, '\n')))
+		ptr = rest[fd];
+		if (!(rest[fd] = ft_strjoin(ptr, buffer)))
 			return (-1);
-		if (check_char(buffer, '\n'))
-			return ((temp[fd] = ft_strcpy_from_c(buffer,
-							temp[fd], '\n')) ? 1 : -1);
+		free(ptr);
 	}
-	free(*line);
-	return (verif);
+	if (!(*line = ft_substr(rest[fd], 0, ft_charpos(rest[fd], '\n'))))
+		return (-1);
+	return (ft_copy(rest, fd));
 }

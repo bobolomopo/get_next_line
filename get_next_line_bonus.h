@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line2.h                                   :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jandre <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/12/10 15:48:13 by jandre            #+#    #+#             */
-/*   Updated: 2020/01/21 17:43:06 by jandre           ###   ########.fr       */
+/*   Created: 2020/01/29 17:33:12 by jandre            #+#    #+#             */
+/*   Updated: 2020/02/04 16:37:48 by jandre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,20 @@
 # endif
 # include <stdlib.h>
 # include <unistd.h>
-# include <stdio.h>
 # include <string.h>
 # include <limits.h>
+# include <fcntl.h>
+# include <stdio.h>
 
-int				get_next_line(int fd, char **line);
-int				ft_strlen(char *str);
-char			*ft_strnew(int size);
-char			*ft_strcpy_from_c_to_c(char *str, char *str2, char c);
-char			*ft_strjoin_c(char *s1, char *s2, char c);
-int				check_char(char *str, char c);
+int		get_next_line(int fd, char **line);
+int		ft_charpos(char *str, char c);
+char	*ft_strnew(int size);
+char	*ft_strcpy(char *dst, const char *src);
+char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_substr(char const *s, int start, int len);
+char	*ft_strchr(char const *s, int c);
+int		ft_strlen(const char *str);
+int		ft_initialize(int fd, char **line, char **rest);
+int		ft_copy(char **rest, int fd);
 
 #endif
